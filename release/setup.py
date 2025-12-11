@@ -24,6 +24,8 @@ University of Waterloo and the Quantum AI team at Google along with help
 from many other contributors within Google.
 """
 
+import os
+import re
 import sys
 from datetime import date
 
@@ -31,7 +33,31 @@ from setuptools import find_packages, setup
 from setuptools.command.install import install
 from setuptools.dist import Distribution
 
-CUR_VERSION = "0.7.4"
+def get_version():
+    """Reads the version from tensorflow_quantum/__init__.py."""
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Try finding tensorflow_quantum in the current directory (pip package structure)
+    path = os.path.join(curr_dir, 'tensorflow_quantum', '__init__.py')
+
+    if not os.path.exists(path):
+        # Try finding tensorflow_quantum in the parent directory (source tree structure)
+        path = os.path.join(curr_dir, '..', 'tensorflow_quantum', '__init__.py')
+
+    if not os.path.exists(path):
+        raise RuntimeError(
+            "Could not find tensorflow_quantum/__init__.py to read version.")
+
+    with open(path) as f:
+        content = f.read()
+
+    match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", content, re.M)
+    if match:
+        return match.group(1)
+    raise RuntimeError("Unable to find version string in " + path)
+
+
+CUR_VERSION = get_version()
 
 DOCLINES = __doc__.split("\n")
 
