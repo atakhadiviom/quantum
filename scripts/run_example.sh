@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+thisdir=$(CDPATH="" cd -- "$(dirname -- "${0}")" && pwd -P)
+repo_dir=$(git -C "${thisdir}" rev-parse --show-toplevel 2>/dev/null || (cd -- "${thisdir}/.." && pwd -P))
+
 cd ..
-cp quantum/scripts/import_test.py import_test.py
+cp "${repo_dir}/scripts/import_test.py" import_test.py
 python import_test.py

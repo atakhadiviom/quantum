@@ -29,8 +29,10 @@ os.environ.setdefault("TF_USE_LEGACY_KERAS", "1")
 # Pylint doesn't like code before imports, but we need the env var set first.
 import tensorflow as tf  # pylint: disable=wrong-import-position
 
-# Must be run from the directory containing `quantum` repo.
-NOTEBOOKS = glob.glob("quantum/docs/tutorials/*.ipynb")
+# Find tutorial notebooks relative to repository root.
+repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+NOTEBOOKS = sorted(
+    glob.glob(os.path.join(repo_dir, "docs", "tutorials", "*.ipynb")))
 
 
 class ExamplesTest(tf.test.TestCase, parameterized.TestCase):
